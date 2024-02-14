@@ -55,10 +55,75 @@
                 echo "No torrents found.";
             } else {
                 echo "<table>";
-                echo "<tr><th>Title</th><th>Seeders</th><th>Leechers</th><th>Size</th><th>Download</th></tr>";
+                echo "<tr><th>Category</th><th>Title</th><th>Seeders</th><th>Leechers</th><th>Size</th><th>Download</th></tr>";
                 foreach($torrents as $torrent) {
+                    $categoryId = $torrent['category'];
+                    $subcategoryId = $torrent['subcategory'];
+                    
+                    $categories = array(
+                        100 => "Audio",
+                        200 => "Video",
+                        300 => "Applications",
+                        400 => "Games",
+                        500 => "Porn",
+                        600 => "Other"
+                    );
+                    
+                    $subcategories = array(
+                        101 => "Music",
+                        102 => "Audio Books",
+                        103 => "Sound Clips",
+                        104 => "FLAC",
+                        105 => "Other",
+                        201 => "Movies",
+                        202 => "Movies DVDR",
+                        203 => "Music Videos",
+                        204 => "Movie Clips",
+                        205 => "TV Shows",
+                        206 => "Handheld",
+                        207 => "HD - Movies",
+                        208 => "HD - TV Shows",
+                        209 => "3D",
+                        210 => "Other",
+                        301 => "Windows",
+                        302 => "Mac",
+                        303 => "UNIX",
+                        304 => "Handheld",
+                        305 => "IOS (iPad/iPhone)",
+                        306 => "Android",
+                        307 => "Other",
+                        401 => "PC",
+                        402 => "Mac",
+                        403 => "PSx",
+                        404 => "XBOX360",
+                        405 => "Wii",
+                        406 => "Handheld",
+                        407 => "IOS (iPad/iPhone)",
+                        408 => "Android",
+                        409 => "Other",
+                        501 => "Movies",
+                        502 => "Movies DVDR",
+                        503 => "Pictures",
+                        504 => "Games",
+                        505 => "HD - Movies",
+                        506 => "Movie Clips",
+                        507 => "Other",
+                        601 => "E-books",
+                        602 => "Comics",
+                        603 => "Pictures",
+                        604 => "Covers",
+                        605 => "Physibles",
+                        606 => "Other"
+                    );
+                    
+                    $categoryName = isset($categories[$categoryId]) ? $categories[$categoryId] : "Unknown";
+                    $subcategoryName = isset($subcategories[$subcategoryId]) ? $subcategories[$subcategoryId] : "Unknown";
+                    
+                    $categoryAndSubcategory = "{$categoryName} > {$subcategoryName}";
+                    
                     $size = formatSizeUnits($torrent['size']);
                     echo "<tr>";
+                    echo "<td>{$categoryAndSubcategory}</td>";
                     echo "<td>{$torrent['title']}</td>";
                     echo "<td>{$torrent['seeders']}</td>";
                     echo "<td>{$torrent['leechers']}</td>";
@@ -68,7 +133,6 @@
                 }
                 echo "</table>";
     
-                // Navegação entre páginas
                 echo "<br>";
                 if ($page > 1) {
                     $prev_page = $page - 1;
@@ -80,7 +144,6 @@
                 }
             }
         } catch (Exception $e) {
-            //echo "Error: No" . $e->getMessage();
             echo "No torrents found!";
         }
     }
