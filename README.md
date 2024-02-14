@@ -1,15 +1,15 @@
 # Torrent Search Script
 
-## Descrição
-Um simples script em PHP para pesquisar torrents usando a API PirateWave, com funcionalidades de paginação e exibição de resultados em uma tabela.
+## Description
+A simple PHP script to search torrents using the PirateWave API, with pagination features and displaying results in a table.
 
-## Funcionalidades
-- Pesquisa de torrents por título.
-- Exibição dos resultados em uma tabela.
-- Paginação para navegar entre os resultados.
+## Features
+- Torrent search by title.
+- Display of results in a table.
+- Pagination for navigating through the results.
 
-## Como Usar
-1. Clone este repositório em sua máquina local.
-2. Abra o arquivo `index.php` em um servidor PHP ou utilizando um servidor local, como XAMPP ou WAMP.
-3. Insira sua consulta de pesquisa na caixa de texto e clique no botão "Search".
-4. Os resultados da pesquisa serão exibidos em uma tabela, com opções para navegar entre as páginas de resultados.
+## How to Use
+1. Clone this repository to your local machine.
+2. Open the `index.php` file on a PHP server or using a local server like XAMPP or WAMP.
+3. Enter your search query into the text box and click the "Search" button.
+4. The search results will be displayed in a table, with options to navigate between result pages.
