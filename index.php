@@ -33,44 +33,53 @@
     
         return $bytes;
     }
-
+    
     if(isset($_GET['search']) && !empty($_GET['search'])) {
         $search_query = urlencode($_GET['search']);
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
         $api_url = "http://piratewave.site/api.php?q={$search_query}&page={$page}";
-        
-        $response = file_get_contents($api_url);
-        $torrents = json_decode($response, true);
-        
-        if($torrents && count($torrents) > 0) {
-            echo "<table border='1'>";
-            echo "<tr><th>Title</th><th>Seeders</th><th>Leechers</th><th>Size</th><th>Download</th></tr>";
-            foreach($torrents as $torrent) {
-                $size = formatSizeUnits($torrent['size']);
-                echo "<tr>";
-                echo "<td>{$torrent['title']}</td>";
-                echo "<td>{$torrent['seeders']}</td>";
-                echo "<td>{$torrent['leechers']}</td>";
-                echo "<td>{$size}</td>";
-                echo "<td><a href='{$torrent['magnet']}'><button>Download</button></a></td>";
-                echo "</tr>";
+    
+        try {
+            $response = @file_get_contents($api_url);
+            if ($response === false) {
+                throw new Exception("Failed to fetch data from the API.");
             }
-            echo "</table>";
-
-            // Navegação entre páginas
-            echo "<br>";
-            if ($page > 1) {
-                $prev_page = $page - 1;
-                echo "<a href='?search={$search_query}&page={$prev_page}'>Previous Page</a> ";
+    
+            $torrents = json_decode($response, true);
+    
+            if($torrents && count($torrents) > 0) {
+                echo "<table border='1'>";
+                echo "<tr><th>Title</th><th>Seeders</th><th>Leechers</th><th>Size</th><th>Download</th></tr>";
+                foreach($torrents as $torrent) {
+                    $size = formatSizeUnits($torrent['size']);
+                    echo "<tr>";
+                    echo "<td>{$torrent['title']}</td>";
+                    echo "<td>{$torrent['seeders']}</td>";
+                    echo "<td>{$torrent['leechers']}</td>";
+                    echo "<td>{$size}</td>";
+                    echo "<td><a href='{$torrent['magnet']}'><button>Download</button></a></td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+    
+                // Navegação entre páginas
+                echo "<br>";
+                if ($page > 1) {
+                    $prev_page = $page - 1;
+                    echo "<a href='?search={$search_query}&page={$prev_page}'>Previous Page</a> ";
+                }
+                if (count($torrents) >= 33) {
+                    $next_page = $page + 1;
+                    echo "<a href='?search={$search_query}&page={$next_page}'>Next Page</a>";
+                }
+            } else {
+                echo "No torrents found.";
             }
-            if (count($torrents) >= 33) {
-                $next_page = $page + 1;
-                echo "<a href='?search={$search_query}&page={$next_page}'>Next Page</a>";
-            }
-        } else {
-            echo "No torrents found.";
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
     }
     ?>
+        ?>
 </body>
 </html>
