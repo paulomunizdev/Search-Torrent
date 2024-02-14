@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Torrent Search</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     <h1>Torrent Search</h1>
@@ -15,23 +29,13 @@
     <br>
     <?php
     function formatSizeUnits($bytes){
-        if ($bytes >= 1099511627776){
-            $bytes = number_format($bytes / 1099511627776, 2) . ' TB';
-        } elseif ($bytes >= 1073741824){
-            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
-        } elseif ($bytes >= 1048576){
-            $bytes = number_format($bytes / 1048576, 2) . ' MB';
-        } elseif ($bytes >= 1024){
-            $bytes = number_format($bytes / 1024, 2) . ' KB';
-        } elseif ($bytes > 1){
-            $bytes = $bytes . ' bytes';
-        } elseif ($bytes == 1){
-            $bytes = $bytes . ' byte';
-        } else{
-            $bytes = '0 bytes';
+        $units = array('bytes', 'KB', 'MB', 'GB', 'TB');
+        $index = 0;
+        while ($bytes >= 1024 && $index < 4) {
+            $bytes /= 1024;
+            $index++;
         }
-    
-        return $bytes;
+        return round($bytes, 2) . ' ' . $units[$index];
     }
     
     if(isset($_GET['search']) && !empty($_GET['search'])) {
@@ -47,8 +51,10 @@
     
             $torrents = json_decode($response, true);
     
-            if($torrents && count($torrents) > 0) {
-                echo "<table border='1'>";
+            if(!$torrents || count($torrents) === 0) {
+                echo "No torrents found.";
+            } else {
+                echo "<table>";
                 echo "<tr><th>Title</th><th>Seeders</th><th>Leechers</th><th>Size</th><th>Download</th></tr>";
                 foreach($torrents as $torrent) {
                     $size = formatSizeUnits($torrent['size']);
@@ -72,14 +78,12 @@
                     $next_page = $page + 1;
                     echo "<a href='?search={$search_query}&page={$next_page}'>Next Page</a>";
                 }
-            } else {
-                echo "No torrents found.";
             }
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            //echo "Error: No" . $e->getMessage();
+            echo "No torrents found!";
         }
     }
     ?>
-        ?>
 </body>
 </html>
